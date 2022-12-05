@@ -1,6 +1,6 @@
 ## General scheme.
 
-![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/scheme.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/scheme.png?raw=true)
 
 
 
