@@ -1,7 +1,6 @@
 ## General scheme.
 
-![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/scheme.png)
-
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/scheme.PNG?raw=true?raw=true)
 
 
 ## Data format.
@@ -40,11 +39,11 @@
 
 By default, json-data and csv-data are matching.
 
-![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/scheme_for_matchig_data.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/scheme_for_matchig_data.PNG?raw=true)
 
 Example of a sent message:
 
-![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/tlg_msg_for_matching_data.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/tlg_msg_for_matching_data.PNG?raw=true)
 
 
 ## Checking for mismatching data values.
@@ -52,16 +51,16 @@ Example of a sent message:
 Breaking the data in the json block a little.
 Step by step...
 
-![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/breaking_data_01.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/breaking_data_01.PNG?raw=true)
 
-![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/breaking_data_02.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/breaking_data_02.PNG?raw=true)
 
-![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/breaking_data_03.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/breaking_data_03.PNG?raw=true)
 
 Runinig workflow again and checking result.
 
-![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/scheme_for_mismatchig_data.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/scheme_for_mismatchig_data.PNG?raw=true)
 
 Example of a sent message:
 
-![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/tlg_msg_for_mismatching_data.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/tlg_msg_for_mismatching_data.PNG?raw=true)
