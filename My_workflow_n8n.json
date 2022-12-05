@@ -1,0 +1,522 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "6919f831-3cd4-47cc-9a97-b19fe4d5691d",
+      "name": "On clicking 'execute'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://xmlcalendar.ru/data/ru/2022/calendar.csv",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "06226ba3-3fa5-4db7-b5d0-80183df0f70f",
+      "name": "GET CSV",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        -160,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://xmlcalendar.ru/data/ru/2022/calendar.json",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "3c0da834-8ae0-44b5-a492-f044c10640c5",
+      "name": "GET JSON",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        -160,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "readAsString": true
+        }
+      },
+      "id": "9cc2274d-178d-46a3-acfd-49577018935e",
+      "name": "CSV to JSON",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        20,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "750409302",
+        "text": "={{ $json.datetime }} --> {{ $json.result_of_comparison }}",
+        "additionalFields": {}
+      },
+      "id": "1f379178-55dc-4ad7-a8c9-ffba331f57c0",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        400
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "from_json",
+              "value": "={{ $json }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "038d48a8-c078-4c15-87c6-690b85058807",
+      "name": "DATA FROM JSON1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        380,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "from_csv",
+              "value": "={{ $json }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6e7659c1-62d0-43a6-861b-1d6bd7eba1ee",
+      "name": "DATA FROM JSON2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        380,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "091ecdfe-6a14-4187-8a2d-6e9f2f877f1a",
+      "name": "Merge1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [
+        600,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ JSON.stringify($json[\"from_json\"]) }}",
+              "value2": "={{ JSON.stringify($json[\"from_csv\"]) }}"
+            }
+          ]
+        }
+      },
+      "id": "57fffb1e-5c93-472e-b51d-efbe7c6191bc",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        780,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "if ($json.from_json && $json.from_csv) {\n  $input.item.json = {};\n  $input.item.json.datetime = Date(Date.now());\n  $input.item.json.result_of_comparison = \"Values MATCH!\";\n}\n\nreturn $input.item;"
+      },
+      "id": "7cac95c4-4312-408e-b38a-e44605d65490",
+      "name": "MATCH=TRUE",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        980,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "if ($json.from_json && $json.from_csv) {\n  $input.item.json = {};\n  $input.item.json.datetime = Date(Date.now());\n  $input.item.json.result_of_comparison = \"Values DO NOT match!\";\n}\n\nreturn $input.item;"
+      },
+      "id": "b77abe61-8c14-4e1a-9514-a6b4d9e4234a",
+      "name": "MATCH=FALSE",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        980,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "year",
+              "value": "={{ $json[\"Год/Месяц\"] }}"
+            },
+            {
+              "name": "months.m01",
+              "value": "={{ $json[\"Январь\"] }}"
+            },
+            {
+              "name": "months.m02",
+              "value": "={{ $json[\"Февраль\"] }}"
+            },
+            {
+              "name": "months.m03",
+              "value": "={{ $json[\"Март\"] }}"
+            },
+            {
+              "name": "months.m04",
+              "value": "={{ $json[\"Апрель\"] }}"
+            },
+            {
+              "name": "months.m05",
+              "value": "={{ $json[\"Май\"] }}"
+            },
+            {
+              "name": "months.m06",
+              "value": "={{ $json[\"Июнь\"] }}"
+            },
+            {
+              "name": "months.m07",
+              "value": "={{ $json[\"Июль\"] }}"
+            },
+            {
+              "name": "months.m08",
+              "value": "={{ $json[\"Август\"] }}"
+            },
+            {
+              "name": "months.m09",
+              "value": "={{ $json[\"Сентябрь\"] }}"
+            },
+            {
+              "name": "months.m10",
+              "value": "={{ $json[\"Октябрь\"] }}"
+            },
+            {
+              "name": "months.m11",
+              "value": "={{ $json[\"Ноябрь\"] }}"
+            },
+            {
+              "name": "months.m12",
+              "value": "={{ $json[\"Декабрь\"] }}"
+            },
+            {
+              "name": "statistics.workdays",
+              "value": "={{ $json[\"Всего рабочих дней\"] }}"
+            },
+            {
+              "name": "statistics.holidays",
+              "value": "={{ $json[\"Всего праздничных и выходных дней\"] }}"
+            },
+            {
+              "name": "statistics.hours40",
+              "value": "={{ $json[\"Количество рабочих часов при 40-часовой рабочей неделе\"] }}"
+            },
+            {
+              "name": "statistics.hours36",
+              "value": "={{ $json[\"Количество рабочих часов при 36-часовой рабочей неделе\"] }}"
+            },
+            {
+              "name": "statistics.hours24",
+              "value": "={{ $json[\"Количество рабочих часов при 24-часовой рабочей неделе\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dda85844-604f-48dc-a9bf-9598a496528e",
+      "name": "UNIFY (JSON)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        200,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "year",
+              "value": "={{ $json[\"year\"] }}"
+            },
+            {
+              "name": "months.m01",
+              "value": "={{ $json[\"months\"][\"0\"][\"days\"] }}"
+            },
+            {
+              "name": "months.m02",
+              "value": "={{ $json[\"months\"][\"1\"][\"days\"] }}"
+            },
+            {
+              "name": "months.m03",
+              "value": "={{ $json[\"months\"][\"2\"][\"days\"] }}"
+            },
+            {
+              "name": "months.m04",
+              "value": "={{ $json[\"months\"][\"3\"][\"days\"] }}"
+            },
+            {
+              "name": "months.m05",
+              "value": "={{ $json[\"months\"][\"4\"][\"days\"] }}"
+            },
+            {
+              "name": "months.m06",
+              "value": "={{ $json[\"months\"][\"5\"][\"days\"] }}"
+            },
+            {
+              "name": "months.m07",
+              "value": "={{ $json[\"months\"][\"6\"][\"days\"] }}"
+            },
+            {
+              "name": "months.m08",
+              "value": "={{ $json[\"months\"][\"7\"][\"days\"] }}"
+            },
+            {
+              "name": "months.m09",
+              "value": "={{ $json[\"months\"][\"8\"][\"days\"] }}"
+            },
+            {
+              "name": "months.m10",
+              "value": "={{ $json[\"months\"][\"9\"][\"days\"] }}"
+            },
+            {
+              "name": "months.m11",
+              "value": "={{ $json[\"months\"][\"10\"][\"days\"] }}"
+            },
+            {
+              "name": "months.m12",
+              "value": "={{ $json[\"months\"][\"11\"][\"days\"] }}"
+            },
+            {
+              "name": "statistics",
+              "value": "={{ $json[\"statistic\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ed606205-8be3-4172-be5f-b7342eb1d0cc",
+      "name": "UNIFY (CSV)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        200,
+        540
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On clicking 'execute'": {
+      "main": [
+        [
+          {
+            "node": "GET CSV",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GET JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET CSV": {
+      "main": [
+        [
+          {
+            "node": "CSV to JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CSV to JSON": {
+      "main": [
+        [
+          {
+            "node": "UNIFY (JSON)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET JSON": {
+      "main": [
+        [
+          {
+            "node": "UNIFY (CSV)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DATA FROM JSON1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DATA FROM JSON2": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "MATCH=TRUE",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "MATCH=FALSE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MATCH=TRUE": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MATCH=FALSE": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "UNIFY (JSON)": {
+      "main": [
+        [
+          {
+            "node": "DATA FROM JSON1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "UNIFY (CSV)": {
+      "main": [
+        [
+          {
+            "node": "DATA FROM JSON2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "timezone": "Europe/Moscow",
+    "saveManualExecutions": false,
+    "callerPolicy": "any"
+  },
+  "hash": "a2b23b834a0a20b438407a4d3ed2a3dd",
+  "id": 1,
+  "meta": {
+    "instanceId": "f3995f9ac6d3b7b7d292230f504a1de2b1e3318fa3751755b1a35d4eb73df631"
+  },
+  "tags": []
+}
