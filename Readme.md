@@ -1,6 +1,6 @@
 ## General scheme.
 
-![](assets/scheme.png)
+![](./assets/scheme.png)
 
 
 
