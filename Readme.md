@@ -1,6 +1,6 @@
 ## General scheme.
 
-![](./assets/scheme.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/scheme.png)
 
 
 
@@ -40,11 +40,11 @@
 
 By default, json-data and csv-data are matching.
 
-![](assets/scheme_for_matchig_data.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/scheme_for_matchig_data.png)
 
 Example of a sent message:
 
-![](assets/tlg_msg_for_matching_data.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/tlg_msg_for_matching_data.png)
 
 
 ## Checking for mismatching data values.
@@ -52,16 +52,16 @@ Example of a sent message:
 Breaking the data in the json block a little.
 Step by step...
 
-![](assets/breaking_data_01.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/breaking_data_01.png)
 
-![](assets/breaking_data_02.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/breaking_data_02.png)
 
-![](assets/breaking_data_03.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/breaking_data_03.png)
 
 Runinig workflow again and checking result.
 
-![](assets/scheme_for_mismatchig_data.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/scheme_for_mismatchig_data.png)
 
 Example of a sent message:
 
-![](assets/tlg_msg_for_mismatching_data.png)
+![](https://github.com/otus-sre-lessons/homework3-n8n-calendar-comparison/blob/main/assets/tlg_msg_for_mismatching_data.png)
